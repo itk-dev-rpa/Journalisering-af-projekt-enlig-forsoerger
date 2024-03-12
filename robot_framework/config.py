@@ -13,15 +13,7 @@ SCREENSHOT_SENDER = "robot@friend.dk"
 
 # Constant/Credential names
 ERROR_EMAIL = "Error Email"
+GRAPH_API = "Graph API"
+NOVA_API = "Nova API"
 
-
-# Queue specific configs
-# ----------------------
-
-# The name of the job queue (if any)
-QUEUE_NAME = None
-
-# The limit on how many queue elements to process
-MAX_TASK_COUNT = 100
-
-# ----------------------
+QUEUE_NAME = "Journalisering af projekt enlig forsørger"
