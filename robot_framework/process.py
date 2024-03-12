@@ -15,8 +15,8 @@ from itk_dev_shared_components.graph.authentication import GraphAccess
 from itk_dev_shared_components.graph import mail as graph_mail
 from itk_dev_shared_components.graph.mail import Email
 from itk_dev_shared_components.kmd_nova.authentication import NovaAccess
-from itk_dev_shared_components.kmd_nova.nova_objects import NovaCase, Document, CaseParty, Task
-from itk_dev_shared_components.kmd_nova import nova_cases, nova_documents, nova_tasks
+from itk_dev_shared_components.kmd_nova.nova_objects import NovaCase, Document, CaseParty
+from itk_dev_shared_components.kmd_nova import nova_cases, nova_documents
 from itk_dev_shared_components.kmd_nova import cpr as nova_cpr
 
 from robot_framework import config
@@ -105,8 +105,7 @@ def create_case(cpr: str, case_date: datetime, nova_access: NovaAccess) -> NovaC
         The relevant nova case.
     """
     # Find the name of the person by looking up the cpr number
-    # name = nova_cpr.get_address_by_cpr(cpr, nova_access)['name']
-    name = "Test Test"
+    name = nova_cpr.get_address_by_cpr(cpr, nova_access)['name']
 
     case_party = CaseParty(
         role="Primær",
