@@ -1,7 +1,7 @@
 """This module contains configuration constants used across the framework"""
 
 # The number of times the robot retries on an error before terminating.
-MAX_RETRY_COUNT = 3
+MAX_RETRY_COUNT = 1
 
 # Whether the robot should be marked as failed if MAX_RETRY_COUNT is reached.
 FAIL_ROBOT_ON_TOO_MANY_ERRORS = True
