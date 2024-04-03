@@ -115,7 +115,7 @@ def create_case(cpr: str, case_date: datetime, nova_access: NovaAccess) -> NovaC
         uuid=None
     )
 
-    case_title = f"Projekt enlig forsøger {datetime.now().year}"
+    case_title = f"Projekt enlig forsørger {datetime.now().year}"
 
     # Create a new case
     case = NovaCase(
