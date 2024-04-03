@@ -15,7 +15,7 @@ from itk_dev_shared_components.graph.authentication import GraphAccess
 from itk_dev_shared_components.graph import mail as graph_mail
 from itk_dev_shared_components.graph.mail import Email
 from itk_dev_shared_components.kmd_nova.authentication import NovaAccess
-from itk_dev_shared_components.kmd_nova.nova_objects import NovaCase, Document, CaseParty
+from itk_dev_shared_components.kmd_nova.nova_objects import NovaCase, Document, CaseParty, Department, Caseworker
 from itk_dev_shared_components.kmd_nova import nova_cases, nova_documents
 from itk_dev_shared_components.kmd_nova import cpr as nova_cpr
 
@@ -117,6 +117,18 @@ def create_case(cpr: str, case_date: datetime, nova_access: NovaAccess) -> NovaC
 
     case_title = f"Projekt enlig forsørger {datetime.now().year}"
 
+    department = Department(
+        id=70363,
+        name="Kontrolteamet",
+        user_key="4BKONTROL"
+    )
+
+    caseworker = Caseworker(
+        uuid="3eb31cbb-d6dc-4b01-9eec-0b415f5b89cb",
+        name="Rpabruger Rpa15 - MÅ IKKE SLETTES RITM0055928",
+        ident="AZRPA15"
+    )
+
     # Create a new case
     case = NovaCase(
         uuid=str(uuid.uuid4()),
@@ -126,7 +138,10 @@ def create_case(cpr: str, case_date: datetime, nova_access: NovaAccess) -> NovaC
         case_parties=[case_party],
         kle_number="32.45.04",
         proceeding_facet="G01",
-        sensitivity="Fortrolige"
+        sensitivity="Fortrolige",
+        responsible_department=department,
+        security_unit=department,
+        caseworker=caseworker
     )
     nova_cases.add_case(case, nova_access)
     return case
