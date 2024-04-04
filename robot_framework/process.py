@@ -35,11 +35,11 @@ def process(orchestrator_connection: OrchestratorConnection) -> None:
     emails = get_emails(graph_access)
     orchestrator_connection.log_info(f"Number of emails to journalize: {len(emails)}")
 
-    # Create a partial function with the static keywords set
+    # Create a partial function with static keywords set
     p_handle_email = partial(handle_email, graph_access=graph_access, nova_access=nova_access, orchestrator_connection=orchestrator_connection)
 
-    for email in emails:
-        p_handle_email(email)
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        executor.map(p_handle_email, emails)
 
 
 def handle_email(email: Email, graph_access: GraphAccess, nova_access: NovaAccess, orchestrator_connection: OrchestratorConnection) -> None:
@@ -70,7 +70,7 @@ def get_emails(graph_access: GraphAccess) -> list[Email]:
     Returns:
         A filtered list of email objects to be handled.
     """
-    # Get all emails from the 'Refusioner' folder.
+    # Get all emails from the 'Kvitteringer til journalisering' folder.
     mails = graph_mail.get_emails_from_folder("kontrolteamet@mkb.aarhus.dk", "Indbakke/Enlig forsørgerprojekt/Kvitteringer til journalisering", graph_access)
 
     # Filter the emails on sender and subject
