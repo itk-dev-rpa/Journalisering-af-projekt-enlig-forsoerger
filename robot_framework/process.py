@@ -18,6 +18,7 @@ from itk_dev_shared_components.kmd_nova.authentication import NovaAccess
 from itk_dev_shared_components.kmd_nova.nova_objects import NovaCase, Document, CaseParty, Department, Caseworker
 from itk_dev_shared_components.kmd_nova import nova_cases, nova_documents
 from itk_dev_shared_components.kmd_nova import cpr as nova_cpr
+import itk_dev_event_log
 
 from robot_framework import config
 
@@ -25,6 +26,8 @@ from robot_framework import config
 def process(orchestrator_connection: OrchestratorConnection) -> None:
     """Do the primary process of the robot."""
     orchestrator_connection.log_trace("Running process.")
+    event_log = orchestrator_connection.get_constant("Event Log")
+    itk_dev_event_log.setup_logging(event_log.value)
 
     graph_creds = orchestrator_connection.get_credential(config.GRAPH_API)
     graph_access = graph_authentication.authorize_by_username_password(graph_creds.username, **json.loads(graph_creds.password))
@@ -54,6 +57,7 @@ def handle_email(email: Email, graph_access: GraphAccess, nova_access: NovaAcces
         attach_email_to_case(email, case, graph_access, nova_access)
 
         graph_mail.move_email(email, "Indbakke/Enlig forsørgerprojekt/Journaliserede kvitteringer", graph_access)
+        itk_dev_event_log.emit(orchestrator_connection.process_name, "Added email to case.")
     except Exception as exc:
         orchestrator_connection.set_queue_element_status(queue_element.id, QueueStatus.FAILED, message=str(exc))
         raise exc
