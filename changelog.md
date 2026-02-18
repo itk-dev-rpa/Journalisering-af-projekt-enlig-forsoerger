@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Reuse existing Nova case if one exists.
 - Removed multithreading.
+- Bumped OpenOrchestrator to v2.
 
 ## [1.1.0]
 
