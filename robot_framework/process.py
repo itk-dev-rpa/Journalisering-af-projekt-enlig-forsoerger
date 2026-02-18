@@ -5,7 +5,6 @@ import os
 import re
 import uuid
 from datetime import datetime
-from concurrent.futures import ThreadPoolExecutor
 from functools import partial
 
 from OpenOrchestrator.orchestrator_connection.connection import OrchestratorConnection
@@ -41,8 +40,8 @@ def process(orchestrator_connection: OrchestratorConnection) -> None:
     # Create a partial function with static keywords set
     p_handle_email = partial(handle_email, graph_access=graph_access, nova_access=nova_access, orchestrator_connection=orchestrator_connection)
 
-    with ThreadPoolExecutor(max_workers=3) as executor:
-        executor.map(p_handle_email, emails)
+    for email in emails:
+        p_handle_email(email)
 
 
 def handle_email(email: Email, graph_access: GraphAccess, nova_access: NovaAccess, orchestrator_connection: OrchestratorConnection) -> None:
@@ -108,6 +107,14 @@ def create_case(cpr: str, case_date: datetime, nova_access: NovaAccess) -> NovaC
     Returns:
         The relevant nova case.
     """
+    case_title = f"Projekt enlig forsørger {datetime.now().year}"
+
+    # Try to find an existing case
+    existing_cases = nova_cases.get_cases(nova_access=nova_access, cpr=cpr, case_title=case_title)
+    for case_ in existing_cases:
+        if case_.title == case_title:
+            return case_
+
     # Find the name of the person by looking up the cpr number
     name = nova_cpr.get_address_by_cpr(cpr, nova_access)['name']
 
@@ -118,8 +125,6 @@ def create_case(cpr: str, case_date: datetime, nova_access: NovaAccess) -> NovaC
         name=name,
         uuid=None
     )
-
-    case_title = f"Projekt enlig forsørger {datetime.now().year}"
 
     department = Department(
         id=70363,
@@ -179,5 +184,5 @@ def attach_email_to_case(email: Email, case: NovaCase, graph_access: GraphAccess
 if __name__ == '__main__':
     conn_string = os.getenv("OpenOrchestratorConnString")
     crypto_key = os.getenv("OpenOrchestratorKey")
-    oc = OrchestratorConnection("Enlig forsørger test", conn_string, crypto_key, "ghbm@aarhus.dk")
+    oc = OrchestratorConnection("Enlig forsørger test", conn_string, crypto_key, "", "")
     process(oc)
