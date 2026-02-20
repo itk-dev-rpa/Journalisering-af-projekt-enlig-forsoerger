@@ -74,7 +74,7 @@ def get_emails(graph_access: GraphAccess) -> list[Email]:
         A filtered list of email objects to be handled.
     """
     # Get all emails from the 'Kvitteringer til journalisering' folder.
-    mails = graph_mail.get_emails_from_folder("kontrolteamet@mkb.aarhus.dk", "Indbakke/Enlig forsørgerprojekt/Kvitteringer til journalisering", graph_access)
+    mails = graph_mail.get_emails_from_folder("kontrolteamet@mkb.aarhus.dk", "Indbakke/Enlig forsørgerprojekt/Kvitteringer til journalisering", graph_access, limit=200)
 
     # Filter the emails on sender and subject
     mails = [mail for mail in mails if mail.sender == "noreply@aarhus.dk" and mail.subject == 'Erklæring - økonomisk fripladstilskud']
