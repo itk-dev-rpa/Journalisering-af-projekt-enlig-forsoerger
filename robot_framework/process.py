@@ -179,10 +179,3 @@ def attach_email_to_case(email: Email, case: NovaCase, graph_access: GraphAccess
     )
 
     nova_documents.attach_document_to_case(case.uuid, doc, nova_access)
-
-
-if __name__ == '__main__':
-    conn_string = os.getenv("OpenOrchestratorConnString")
-    crypto_key = os.getenv("OpenOrchestratorKey")
-    oc = OrchestratorConnection("Enlig forsørger test", conn_string, crypto_key, "", "", "")
-    process(oc)
