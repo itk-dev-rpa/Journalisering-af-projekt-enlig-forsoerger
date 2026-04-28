@@ -1,7 +1,6 @@
 """This module contains the main process of the robot."""
 
 import json
-import os
 import re
 import uuid
 from datetime import datetime
